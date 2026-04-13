@@ -1,30 +1,71 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import AdminDashboard from "./pages/AdminDashboard";
-import DoctorDashboard from "./pages/DoctorDashboard";
 import PatientDashboard from "./pages/PatientDashboard";
-import MyAppointments from "./pages/MyAppointments";
-import Navbar from "./components/Navbar";
+import DoctorDashboard from "./pages/DoctorDashboard";
+import Notifications from "./pages/Notifications";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-
+    <Router>
       <Routes>
+
+        {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* DASHBOARDS */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/doctor" element={<DoctorDashboard />} />
-        <Route path="/patient" element={<PatientDashboard />} />
+        {/* Protected Routes With Layout */}
+        <Route
+          path="/doctor-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <DoctorDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
 
-        {/* APPOINTMENTS */}
-        <Route path="/my-appointments" element={<MyAppointments />} />
+        <Route
+          path="/patient-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <PatientDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/notifications/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Notifications />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <Layout>
+                <AdminDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 

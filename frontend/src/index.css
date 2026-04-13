@@ -1,37 +1,17 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+/* GLOBAL RESET */
+
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-button {
-  padding: 8px 14px;
-  margin: 5px;
-  border: none;
-  background: #1976d2;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f4f6f9;
 }
 
-button:hover {
-  background: #125aa3;
-}
-
-input {
-  padding: 8px;
-  margin: 6px 0;
-  width: 250px;
-}
-
-form {
-  background: white;
-  padding: 20px;
-  width: 300px;
-  margin: 60px auto;
-  border-radius: 6px;
-}
-
-h2 {
-  text-align: center;
+a {
+  text-decoration: none;
+  color: inherit;
 }

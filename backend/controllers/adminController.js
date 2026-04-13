@@ -1,63 +1,125 @@
 const User = require("../models/User");
-const Doctor = require("../models/Doctor");
+const Appointment = require("../models/Appointment");
 const Notification = require("../models/Notification");
 
-// GET ADMIN DASHBOARD STATS
+/* ================================
+   ADMIN DASHBOARD STATS
+   GET /api/admin/stats
+================================ */
 const getAdminStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
-    const totalDoctors = await Doctor.countDocuments({ status: "approved" });
-    const pendingDoctors = await Doctor.countDocuments({ status: "pending" });
-    const totalAppointments = await require("../models/Appointment").countDocuments();
+
+    const totalDoctors = await User.countDocuments({
+      role: "doctor",
+    });
+
+    const pendingDoctors = await User.countDocuments({
+      role: "doctor",
+      isApproved: false,
+    });
+
+    const totalAppointments = await Appointment.countDocuments();
 
     res.json({
       totalUsers,
       totalDoctors,
       pendingDoctors,
-      totalAppointments
+      totalAppointments,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// GET DOCTOR APPLICATIONS
+/* ================================
+   GET ALL DOCTORS (Pending)
+   GET /api/admin/doctors
+================================ */
 const getDoctorApplications = async (req, res) => {
   try {
-    const applications = await Doctor.find({ status: "pending" }).populate(
-      "userId",
-      "name email"
-    );
+    const doctors = await User.find({
+      role: "doctor",
+      isApproved: false,
+    }).select("-password");
 
-    res.json(applications);
+    res.json(doctors);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// APPROVE / REJECT DOCTOR
+/* ================================
+   GET ALL PATIENTS
+   GET /api/admin/patients
+================================ */
+const getAllPatients = async (req, res) => {
+  try {
+    const patients = await User.find({
+      role: "patient",
+    }).select("-password");
+
+    res.json(patients);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* ================================
+   GET ALL APPOINTMENTS
+   GET /api/admin/appointments
+================================ */
+const getAllAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate("patient", "name email")
+      .populate("doctor", "name email");
+
+    res.json(appointments);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* ================================
+   APPROVE DOCTOR
+   PUT /api/admin/approve/:id
+================================ */
 const updateDoctorStatus = async (req, res) => {
   try {
-    const { doctorId, status } = req.body;
+    const { id, action } = req.body;
 
-    const doctor = await Doctor.findById(doctorId);
-    if (!doctor) {
+    const doctor = await User.findById(id);
+
+    if (!doctor || doctor.role !== "doctor") {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    doctor.status = status;
-    await doctor.save();
+    if (action === "approve") {
+      doctor.isApproved = true;
+      await doctor.save();
 
-    const user = await User.findById(doctor.userId);
-    user.role = status === "approved" ? "doctor" : "patient";
-    await user.save();
+      await Notification.create({
+        user: doctor._id,
+        message: "Your doctor account has been approved by admin"
+      });
 
-    await Notification.create({
-      userId: doctor.userId,
-      message: `Your doctor application was ${status}`
-    });
+      return res.json({ message: "Doctor approved successfully" });
+    }
 
-    res.json({ message: `Doctor ${status} successfully` });
+    if (action === "reject") {
+      doctor.role = "patient";
+      doctor.isApproved = true;
+      await doctor.save();
+
+      await Notification.create({
+        user: doctor._id,
+        message: "Your doctor application has been rejected"
+      });
+
+      return res.json({ message: "Doctor rejected successfully" });
+    }
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -66,5 +128,7 @@ const updateDoctorStatus = async (req, res) => {
 module.exports = {
   getAdminStats,
   getDoctorApplications,
-  updateDoctorStatus
+  getAllPatients,
+  getAllAppointments,
+  updateDoctorStatus,
 };

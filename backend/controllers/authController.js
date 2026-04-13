@@ -1,94 +1,76 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
 
-// GENERATE JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "1d"
+    expiresIn: "1d",
   });
 };
 
-// REGISTER
+/* ============================
+   REGISTER USER
+============================ */
 const registerUser = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      res.status(400);
-      throw new Error("User already exists");
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: "patient"
+      role: role || "patient", // default patient
     });
 
     res.status(201).json({
       token: generateToken(user._id),
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      user,
     });
   } catch (error) {
-    res.status(500);
-    throw new Error(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// LOGIN
+/* ============================
+   LOGIN USER
+============================ */
 const loginUser = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
     if (!user) {
-      res.status(401);
-      throw new Error("Invalid credentials");
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      res.status(401);
-      throw new Error("Invalid credentials");
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // 🚫 BLOCK UNAPPROVED DOCTORS
+    if (user.role === "doctor" && !user.isApproved === false) {
+      return res.status(403).json({
+        message: "Doctor account pending admin approval",
+      });
     }
 
     res.json({
       token: generateToken(user._id),
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+      user,
     });
   } catch (error) {
-    res.status(500);
-    throw new Error(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = {
-  registerUser,
-  loginUser
-};
+module.exports = { registerUser, loginUser };

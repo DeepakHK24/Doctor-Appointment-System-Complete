@@ -1,0 +1,447 @@
+/* ======================================
+   GLOBAL DASHBOARD CONTAINER
+====================================== */
+
+.dashboard-container {
+  padding: 30px 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ======================================
+   HEADER CARD (Doctor + Notifications)
+====================================== */
+
+.header-card {
+  padding: 35px 40px;
+  border-radius: 20px;
+  color: white;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.header-card h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.header-card p {
+  margin-top: 10px;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+/* ======================================
+   DOCTOR DASHBOARD
+====================================== */
+
+.doctor-dashboard {
+  padding: 20px 10px;
+}
+
+/* Stats Grid */
+
+.doctor-dashboard .stats-grid {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Stat Card */
+
+.doctor-dashboard .stat-card {
+  flex: 1;
+  padding: 30px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  transition: 0.3s ease;
+}
+
+.doctor-dashboard .stat-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Title */
+
+.doctor-dashboard .stat-card h4 {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 15px;
+}
+
+/* NUMBER FIX (LEFT → SLIGHT RIGHT ON HOVER) */
+
+.doctor-dashboard .stat-card h2 {
+  font-size: 38px;
+  font-weight: bold;
+  text-align: left;
+  transition: transform 0.4s ease;
+  transform: translateX(0);
+  color: white; /* visible in light mode */
+}
+
+.doctor-dashboard .stat-card:hover h2 {
+  transform: translateX(20px); /* controlled movement */
+}
+
+/* ======================================
+   DOCTOR CARDS (Slots + Appointments)
+====================================== */
+
+.doctor-dashboard .card {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  margin-top: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.doctor-dashboard .item-box {
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: #f5f9ff;
+  border: 1px solid #e3ecf7;
+  transition: 0.3s ease;
+}
+
+.doctor-dashboard .item-box:hover {
+  background: #eaf2ff;
+}
+
+/* ======================================
+   STATUS COLORS (GLOBAL SAFE)
+====================================== */
+
+.status-approved {
+  color: #00b46b;
+  font-weight: 600;
+}
+
+.status-rejected {
+  color: #e63757;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f6c343;
+  font-weight: 600;
+}
+
+/* ======================================
+   PATIENT DASHBOARD (SCOPED ONLY)
+====================================== */
+
+.patient-dashboard .dashboard-container {
+  padding-top: 10px;
+}
+
+/* Patient Header */
+
+.patient-header {
+  padding: 35px 40px;
+  border-radius: 20px;
+  color: white;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* Section Titles */
+
+.patient-section-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1e3c72;
+}
+
+body.dark-mode .patient-section-title {
+  color: #f1f5f9;
+}
+
+body.dark-mode .card h2 {
+  color: #f1f5f9;
+}
+
+/* Cards */
+
+.patient-dashboard .card {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+
+/* Appointment Card */
+
+.appointment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  background: #f9fbff;
+  border: 1px solid #e3ecf7;
+  transition: 0.3s ease;
+}
+
+.appointment-card:hover {
+  background: #f1f6ff;
+}
+
+.appointment-card h3 {
+  margin-bottom: 6px;
+  font-size: 18px;
+  color: #1e3c72;
+}
+
+/* ======================================
+   FORM ELEMENTS
+====================================== */
+
+.slot-form {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+select,
+input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border: 1px solid #1b6ca8;
+}
+
+/* Buttons */
+
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-success {
+  background: #00b46b;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #00985a;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: #e63757;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c5304c;
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+/* ======================================
+   NOTIFICATIONS (GLOBAL)
+====================================== */
+
+.notifications-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-4px);
+}
+
+.notification-card.unread {
+  border-left: 5px solid #2563eb;
+  background: #f5f9ff;
+}
+
+.notification-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-top: 8px;
+}
+
+.notification-content p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #777;
+  margin-top: 5px;
+  display: block;
+}
+
+.empty-state {
+  padding: 60px;
+  text-align: center;
+  border-radius: 20px;
+  background: #f9fbff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* ======================================
+   DARK MODE SUPPORT
+====================================== */
+
+body.dark-mode .doctor-dashboard .card,
+body.dark-mode .patient-dashboard .card {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+body.dark-mode .appointment-card {
+  background: #1b2a41;
+  border: 1px solid #334155;
+}
+
+body.dark-mode .appointment-card h3 {
+  color: #ffffff;
+}
+
+body.dark-mode .notification-card {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+body.dark-mode .notification-card.unread {
+  background: #1b2a41;
+  border-left: 5px solid #3b82f6;
+}
+
+body.dark-mode .notification-time {
+  color: #94a3b8;
+}
+
+body.dark-mode .empty-state {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* ======================================
+   SUBTLE HOSPITAL PREMIUM GLOW
+====================================== */
+
+/* Doctor Stat Cards Glow */
+.doctor-dashboard .stat-card {
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(37, 99, 235, 0.25); /* soft hospital blue glow */
+}
+
+/* On Hover → Slightly stronger */
+.doctor-dashboard .stat-card:hover {
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(37, 99, 235, 0.35);
+}
+
+/* Patient Header Glow */
+.patient-header {
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.15),
+    0 0 25px rgba(30, 60, 114, 0.25);
+}
+
+/* Dark Mode Glow Upgrade */
+body.dark-mode .doctor-dashboard .stat-card,
+body.dark-mode .patient-header {
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 35px rgba(59, 130, 246, 0.4);
+}
+
+/* ================= STATUS COLORS ================= */
+
+.status-approved {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+body.dark-mode .status-approved {
+  color: #4ade80;
+}
+
+/* ======================================
+   GLOBAL ITEM HOVER TEXT FIX
+====================================== */
+
+.item-box {
+  color: #1f2937;
+}
+
+.item-box strong {
+  color: #788fbb;
+}
+
+/* Light mode hover */
+.item-box:hover {
+  color: #1f2937;
+}
+
+.item-box:hover strong {
+  color: #1e3c72;
+}
+
+/* Dark mode normal */
+body.dark-mode .item-box {
+  color: #e2e8f0;
+}
+
+/* Dark mode hover */
+body.dark-mode .item-box:hover {
+  background: #263548;
+  color: #ffffff;
+}
+
+body.dark-mode .item-box:hover strong {
+  color: #ffffff;
+}

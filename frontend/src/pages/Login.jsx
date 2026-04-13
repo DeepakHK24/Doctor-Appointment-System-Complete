@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser } from "../api/authApi";
+import axios from "axios";
+import "./auth.css";
 
-const Login = () => {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,54 +12,62 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await loginUser({ email, password });
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password }
+      );
 
-      // save token & user
+      // Save token + user
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      const role = res.data.user.role;
+      // Role-based redirect
+      if (res.data.user.role === "admin") {
+        navigate("/admin");
+      } else if (res.data.user.role === "doctor") {
+        navigate("/doctor-dashboard");
+      } else {
+        navigate("/patient-dashboard");
+      }
 
-      // 🔥 ROLE BASED REDIRECT
-      if (role === "admin") navigate("/admin");
-      else if (role === "doctor") navigate("/doctor");
-      else navigate("/patient");
-
-    } catch (err) {
-      alert("Invalid credentials");
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      alert("Login failed");
     }
   };
 
   return (
-    <div className="auth-box">
-      <h2>Login</h2>
+    <div className="auth-container">
+      <div className="auth-card">
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <h1 className="project-title">Doctor Appointment System</h1><br></br>
+        <h2>Login</h2>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <form onSubmit={handleLogin}>
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <button type="submit">Login</button>
-      </form>
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-      {/* 🔥 REGISTER LINK */}
-      <p>
-        New user? <Link to="/register">Register</Link>
-      </p>
+          <button type="submit">Login</button><br></br>
+        </form>
+        <br></br>
+        <p>
+          Don’t have an account? <Link to="/register">Register</Link>
+        </p>
+
+      </div>
     </div>
   );
-};
+}
 
 export default Login;

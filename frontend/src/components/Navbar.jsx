@@ -1,36 +1,36 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "./navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/");
   };
 
-  if (!user) return null;
-
   return (
-    <nav>
-      <span>Doctor Appointment System</span>
+    <nav className="navbar">
+      <div className="logo">🏥 MediCare System</div>
 
-      {user.role === "patient" && (
-        <>
-          <Link to="/patient">Dashboard</Link>
-          <Link to="/my-appointments">My Appointments</Link>
-        </>
-      )}
+      <div className="nav-links">
+        {user?.role === "patient" && (
+          <Link to="/patient-dashboard">Dashboard</Link>
+        )}
 
-      {user.role === "doctor" && (
-        <Link to="/doctor">Dashboard</Link>
-      )}
+        {user?.role === "doctor" && (
+          <Link to="/doctor-dashboard">Dashboard</Link>
+        )}
 
-      {user.role === "admin" && (
-        <Link to="/admin">Dashboard</Link>
-      )}
+        <Link to="/notifications">Notifications</Link>
 
-      <button onClick={logout}>Logout</button>
+        <button onClick={logout} className="logout-btn">
+          Logout
+        </button>
+      </div>
     </nav>
   );
 };

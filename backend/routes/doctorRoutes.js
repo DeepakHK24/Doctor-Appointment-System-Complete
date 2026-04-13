@@ -1,16 +1,17 @@
 const express = require("express");
-const { applyDoctor } = require("../controllers/doctorController");
-const authMiddleware = require("../middleware/authMiddleware");
-const roleMiddleware = require("../middleware/roleMiddleware");
-
 const router = express.Router();
+const User = require("../models/User");
 
-// Patient applies as doctor
-router.post(
-  "/apply",
-  authMiddleware,
-  roleMiddleware("patient"),
-  applyDoctor
-);
+/* GET ALL DOCTORS */
+router.get("/", async (req, res) => {
+  try {
+    const doctors = await User.find({ role: "doctor" }).select(
+      "_id name"
+    );
+    res.json(doctors);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching doctors" });
+  }
+});
 
 module.exports = router;

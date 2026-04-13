@@ -1,21 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { getAdminDashboard } from "../api/dashboardApi";
-import { updateDoctorStatus } from "../api/doctorApi";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+import "../styles/dashboard.css";
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState(null);
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const API = "http://localhost:5000";
+  const token = localStorage.getItem("token");
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const section = query.get("section") || "doctors";
+
+  const [doctors, setDoctors] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+
+  const headers = { Authorization: `Bearer ${token}` };
 
   const fetchData = async () => {
     try {
-      const res = await getAdminDashboard();
-      setStats(res.data.stats);
-      setApplications(res.data.doctorApplications);
+      const docRes = await axios.get(`${API}/api/admin/doctors`, { headers });
+      const patRes = await axios.get(`${API}/api/admin/patients`, { headers });
+      const appRes = await axios.get(`${API}/api/admin/appointments`, { headers });
+
+      setDoctors(docRes.data);
+      setPatients(patRes.data);
+      setAppointments(appRes.data);
     } catch (err) {
-      alert("Failed to load admin dashboard");
-    } finally {
-      setLoading(false);
+      console.log(err.response?.data || err.message);
     }
   };
 
@@ -23,60 +35,97 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  const handleStatusChange = async (id, status) => {
-    try {
-      await updateDoctorStatus(id, status);
-      fetchData();
-    } catch {
-      alert("Action failed");
-    }
+  const doctorAction = async (id, action) => {
+    const confirmAction = window.confirm(
+      `Are you sure you want to ${action} this doctor?`
+    );
+    if (!confirmAction) return;
+
+    await axios.put(
+      `${API}/api/admin/doctor-action`,
+      { id, action },
+      { headers }
+    );
+
+    fetchData();
   };
 
-  if (loading) return <p>Loading...</p>;
-
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
+    <div className="doctor-dashboard">
+      <div className="dashboard-container">
 
-      {stats && (
-        <>
-          <p>Total Users: {stats.users}</p>
-          <p>Total Doctors: {stats.doctors}</p>
-          <p>Total Appointments: {stats.appointments}</p>
-        </>
-      )}
+        <div className="header-card">
+          <h1>Admin Dashboard</h1>
+          <p>System Management Panel</p>
+        </div>
 
-      <h3>Doctor Applications</h3>
+        {/* ================= DOCTORS ================= */}
+        {section === "doctors" && (
+          <div className="card">
+            <h2>Pending Doctors</h2><br></br>
 
-      {applications.length === 0 ? (
-        <p>No pending applications</p>
-      ) : (
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.map((doc) => (
-              <tr key={doc._id}>
-                <td>{doc.name}</td>
-                <td>{doc.status}</td>
-                <td>
-                  <button onClick={() => handleStatusChange(doc._id, "approved")}>
+            {doctors.length === 0 && <p>No pending doctors</p>}
+
+            {doctors.map((doc) => (
+              <div key={doc._id} className="item-box">
+                <div>
+                  <strong>{doc.name}</strong>
+                  <p>{doc.email}</p>
+                </div>
+
+                <div>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => doctorAction(doc._id, "approve")}
+                  >
                     Approve
                   </button>
-                  <button onClick={() => handleStatusChange(doc._id, "rejected")}>
+
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => doctorAction(doc._id, "reject")}
+                    style={{ marginLeft: "10px" }}
+                  >
                     Reject
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      )}
+          </div>
+        )}
+
+        {/* ================= PATIENTS ================= */}
+        {section === "patients" && (
+          <div className="card">
+            <h2>All Patients</h2><br></br>
+
+            {patients.map((pat) => (
+              <div key={pat._id} className="item-box">
+                <strong>{pat.name}</strong>
+                <p>{pat.email}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ================= APPOINTMENTS ================= */}
+        {section === "appointments" && (
+          <div className="card">
+            <h2>All Appointments</h2><br></br>
+
+            {appointments
+                .filter(app => app.status === "approved")
+                .map((app) => (
+                    <div key={app._id} className="item-box">
+                    <strong>
+                        {app.patient?.name} - {app.doctor?.name}
+                    </strong>
+                    </div>
+            ))}
+          </div>
+        )}
+
+      </div>
     </div>
   );
 };

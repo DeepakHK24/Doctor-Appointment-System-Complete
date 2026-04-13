@@ -1,37 +1,39 @@
 const express = require("express");
+const router = express.Router();
+
 const {
   getAdminStats,
   getDoctorApplications,
-  updateDoctorStatus
+  updateDoctorStatus,
+  getAllPatients,
+  getAllAppointments
 } = require("../controllers/adminController");
 
-const authMiddleware = require("../middleware/authMiddleware");
-const roleMiddleware = require("../middleware/roleMiddleware");
+const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-const router = express.Router();
+/* ================================
+   ADMIN STATS
+================================ */
+router.get("/stats", protect, adminOnly, getAdminStats);
 
-// ADMIN DASHBOARD
-router.get(
-  "/stats",
-  authMiddleware,
-  roleMiddleware("admin"),
-  getAdminStats
-);
+/* ================================
+   GET ALL DOCTORS
+================================ */
+router.get("/doctors", protect, adminOnly, getDoctorApplications);
 
-// VIEW DOCTOR APPLICATIONS
-router.get(
-  "/doctor-applications",
-  authMiddleware,
-  roleMiddleware("admin"),
-  getDoctorApplications
-);
+/* ================================
+   GET ALL PATIENTS
+================================ */
+router.get("/patients", protect, adminOnly, getAllPatients);
 
-// APPROVE / REJECT DOCTOR
-router.post(
-  "/update-doctor-status",
-  authMiddleware,
-  roleMiddleware("admin"),
-  updateDoctorStatus
-);
+/* ================================
+   GET ALL APPOINTMENTS
+================================ */
+router.get("/appointments", protect, adminOnly, getAllAppointments);
+
+/* ================================
+   APPROVE DOCTOR
+================================ */
+router.put("/doctor-action", protect, adminOnly, updateDoctorStatus);
 
 module.exports = router;

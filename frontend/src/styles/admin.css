@@ -1,0 +1,39 @@
+/* ======================================
+   ADMIN DASHBOARD (SYSTEM ALIGNED)
+====================================== */
+
+.admin-dashboard {
+    padding: 20px 10px;
+  }
+  
+  .admin-item {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    background: #f5f9ff;
+    border: 1px solid #e3ecf7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease;
+  }
+  
+  .admin-item:hover {
+    background: #eaf2ff;
+  }
+  
+  .admin-item.simple {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  
+  /* Dark Mode */
+  
+  body.dark-mode .admin-item {
+    background: #1b2a41;
+    border: 1px solid #334155;
+  }
+  
+  body.dark-mode .admin-item:hover {
+    background: #263548;
+  }

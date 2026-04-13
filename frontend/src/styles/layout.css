@@ -1,0 +1,312 @@
+/* ===============================
+   GLOBAL LAYOUT
+=============================== */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f9ff;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(15, 76, 129, 0.04) 1px,
+    transparent 0
+  );
+  background-size: 30px 30px;
+  transition: 0.6s ease;
+}
+
+/* ===============================
+   SIDEBAR
+=============================== */
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+/* Glass highlight */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+  transform: rotate(25deg);
+}
+
+.logo {
+  color: white;
+  margin-bottom: 40px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* ===============================
+   SIDEBAR LINKS
+=============================== */
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-link {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-link:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(6px);
+}
+
+.sidebar-link.active {
+  background: white;
+  color: #2a5298;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Subtle hospital glow on sidebar */
+.sidebar {
+  box-shadow: 
+    5px 0 25px rgba(0, 0, 0, 0.15),
+    0 0 30px rgba(30, 60, 114, 0.2);
+}
+
+/* Dark mode sidebar glow */
+body.dark-mode .sidebar {
+  box-shadow:
+    5px 0 25px rgba(0, 0, 0, 0.4),
+    0 0 35px rgba(59, 130, 246, 0.25);
+}
+
+/* ===============================
+   SIDEBAR BOTTOM
+=============================== */
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 30px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #dc3545;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #b02a37;
+  transform: translateY(-2px);
+}
+
+/* ===============================
+   MAIN AREA
+=============================== */
+
+.main {
+  margin-left: 240px;
+  flex: 1;
+  background: #f4f6f9;
+  min-height: 100vh;
+  transition: background 0.6s ease;
+}
+
+/* ===============================
+   TOPBAR
+=============================== */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 40px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: 0.6s ease;
+}
+
+.role-text {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ===============================
+   STAT NUMBER (SAFE VERSION)
+=============================== */
+
+/* Default LEFT */
+.stat-card h2 {
+  margin-top: 15px;
+  font-size: 34px;
+  font-weight: bold;
+  color: #1e3c72;
+  text-align: left;
+  transition: transform 0.3s ease;
+}
+
+/* Controlled Hover Movement */
+.stat-card:hover h2 {
+  transform: translateX(20px);
+}
+
+/* ===============================
+   DARK MODE
+=============================== */
+
+body.dark-mode {
+  background: linear-gradient(135deg, #0f172a, #111827);
+  color: #e2e8f0;
+}
+
+/* Dark Sidebar */
+
+body.dark-mode .sidebar {
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+}
+
+/* Dark Main */
+
+body.dark-mode .main {
+  background: #0f172a;
+}
+
+/* Dark Topbar */
+
+body.dark-mode .topbar {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Dark Cards */
+
+body.dark-mode .card {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Dark Stat Numbers */
+
+body.dark-mode .stat-card h2 {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(37,99,235,0.5);
+}
+
+/* Dark Inputs */
+
+body.dark-mode input,
+body.dark-mode select {
+  background: #334155;
+  color: white;
+  border: 1px solid #475569;
+}
+
+/* Dark Item Box */
+
+body.dark-mode .item-box {
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+/* ===============================
+   THEME TOGGLE
+=============================== */
+
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mode-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===============================
+   PREMIUM SWITCH
+=============================== */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 32px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background-color: #cbd5e1;
+  border-radius: 34px;
+  cursor: pointer;
+  transition: 0.6s ease;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.6s ease;
+}
+
+/* Dark Mode ON */
+
+.switch input:checked + .slider {
+  background-color: #2563eb;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(38px);
+}
+
+/* ===============================
+   SMOOTH GLOBAL TRANSITIONS
+=============================== */
+
+body,
+.sidebar,
+.main,
+.card,
+.stat-card,
+.topbar,
+input,
+select {
+  transition: background 0.6s ease, color 0.6s ease, border 0.6s ease;
+}
